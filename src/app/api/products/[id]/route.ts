@@ -1,10 +1,10 @@
-// src/app/api/users/[id]/route.ts
+// src/app/api/products/[id]/route.ts
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   const { id } = params
-  return Response.json({ id, name: `User ${id}` })
+  return Response.json({ id, name: `Product ${id}` })
 }
 
 export async function PUT(
@@ -21,5 +21,5 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const { id } = params
-  return Response.json({ success: true, message: `User ${id} deleted` })
+  return Response.json({ success: true, message: `Product ${id} deleted` })
 }

@@ -1,80 +1,13 @@
-// app/api/products/route.ts - Complete Fixed Version for Next.js 15+
-
-// Sample products data
-const products = [
-  { id: '1', name: 'Black Seed Oil', price: 45.99, stock: 25, category: 'Immune Support', imageUrl: '/n1.jpeg', herbal: true },
-  { id: '2', name: 'Organic Honey', price: 64.52, stock: 15, category: 'Digestive Health', imageUrl: '/n2.jpeg', herbal: true }
-]
-
-// GET /api/products
-export async function GET(request: Request) {
-  const url = new URL(request.url)
-  const category = url.searchParams.get('category')
-  
-  let filtered = products
-  if (category && category !== 'All') {
-    filtered = filtered.filter(p => p.category === category)
-  }
-  
-  return Response.json(filtered)
+// src/app/api/orders/route.ts
+export async function GET() {
+  const orders = [
+    { id: '1', total: 156.50, status: 'PENDING' },
+    { id: '2', total: 89.99, status: 'DELIVERED' }
+  ]
+  return Response.json(orders)
 }
 
-// POST /api/products
 export async function POST(request: Request) {
   const body = await request.json()
-  const newProduct = {
-    id: String(products.length + 1),
-    ...body,
-    createdAt: new Date().toISOString()
-  }
-  products.push(newProduct)
-  return Response.json({ success: true, product: newProduct }, { status: 201 })
-}
-
-// GET /api/products/[id] - FIXED
-export async function GET_BY_ID(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params
-  const product = products.find(p => p.id === id)
-  
-  if (!product) {
-    return Response.json({ error: 'Product not found' }, { status: 404 })
-  }
-  
-  return Response.json(product)
-}
-
-// PUT /api/products/[id] - FIXED
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params
-  const body = await request.json()
-  const productIndex = products.findIndex(p => p.id === id)
-  
-  if (productIndex === -1) {
-    return Response.json({ error: 'Product not found' }, { status: 404 })
-  }
-  
-  products[productIndex] = { ...products[productIndex], ...body }
-  return Response.json({ success: true, product: products[productIndex] })
-}
-
-// DELETE /api/products/[id] - FIXED
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params
-  const productIndex = products.findIndex(p => p.id === id)
-  
-  if (productIndex === -1) {
-    return Response.json({ error: 'Product not found' }, { status: 404 })
-  }
-  
-  products.splice(productIndex, 1)
-  return Response.json({ success: true })
+  return Response.json({ success: true, order: body })
 }

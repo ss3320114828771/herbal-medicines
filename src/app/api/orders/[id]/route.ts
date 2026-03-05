@@ -1,13 +1,13 @@
-// src/app/api/users/[id]/route.ts
+// src/app/api/orders/[id]/route.ts
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   const { id } = params
-  return Response.json({ id, name: `User ${id}` })
+  return Response.json({ id, message: `Order ${id} details` })
 }
 
-export async function PUT(
+export async function PATCH(
   request: Request,
   { params }: { params: { id: string } }
 ) {
@@ -21,5 +21,5 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const { id } = params
-  return Response.json({ success: true, message: `User ${id} deleted` })
+  return Response.json({ success: true, message: `Order ${id} deleted` })
 }

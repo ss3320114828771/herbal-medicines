@@ -1,5 +1,5 @@
-// api/auth/route.ts
-// Super ultra simplified version - No external packages, pure Next.js
+// app/api/auth/route.ts
+// Super ultra simplified version - Fixed for Next.js 15+ and Vercel deployment
 
 export async function POST(request: Request) {
   try {
@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     const users = [
       {
         id: '1',
-        email: 'sajid.syed@gmail.com',
+        email: 'sajidsyedhafizsajidsyed@gmail.com',
         password: 'admin123',
         name: 'Hafiz Sajid Syed',
         role: 'ADMIN'
@@ -27,18 +27,18 @@ export async function POST(request: Request) {
     const user = users.find(u => u.email === email)
 
     if (!user) {
-      return new Response(JSON.stringify({ error: 'User not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' }
-      })
+      return Response.json(
+        { error: 'User not found' },
+        { status: 404 }
+      )
     }
 
-    // Simple password check (no bcrypt)
+    // Simple password check
     if (user.password !== password) {
-      return new Response(JSON.stringify({ error: 'Invalid password' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      })
+      return Response.json(
+        { error: 'Invalid password' },
+        { status: 401 }
+      )
     }
 
     // Create simple token (base64 encoded)
@@ -51,27 +51,29 @@ export async function POST(request: Request) {
     }))
 
     // Set cookie manually
-    return new Response(JSON.stringify({
-      success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role
+    return Response.json(
+      {
+        success: true,
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role
+        }
+      },
+      {
+        status: 200,
+        headers: {
+          'Set-Cookie': `token=${token}; Path=/; HttpOnly; Max-Age=${7 * 24 * 60 * 60}; SameSite=Lax${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`
+        }
       }
-    }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Set-Cookie': `token=${token}; Path=/; HttpOnly; Max-Age=${7 * 24 * 60 * 60}`
-      }
-    })
+    )
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Something went wrong' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    })
+    return Response.json(
+      { error: 'Something went wrong' },
+      { status: 500 }
+    )
   }
 }
 
@@ -82,10 +84,10 @@ export async function GET(request: Request) {
     const tokenCookie = cookieHeader.split(';').find(c => c.trim().startsWith('token='))
     
     if (!tokenCookie) {
-      return new Response(JSON.stringify({ error: 'Not authenticated' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      })
+      return Response.json(
+        { error: 'Not authenticated' },
+        { status: 401 }
+      )
     }
 
     const token = tokenCookie.split('=')[1]
@@ -96,45 +98,47 @@ export async function GET(request: Request) {
       
       // Check if expired
       if (userData.exp < Date.now()) {
-        return new Response(JSON.stringify({ error: 'Token expired' }), {
-          status: 401,
-          headers: { 'Content-Type': 'application/json' }
-        })
+        return Response.json(
+          { error: 'Token expired' },
+          { status: 401 }
+        )
       }
 
-      return new Response(JSON.stringify({ 
-        user: {
-          id: userData.id,
-          email: userData.email,
-          name: userData.name,
-          role: userData.role
-        }
-      }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      })
+      return Response.json(
+        { 
+          user: {
+            id: userData.id,
+            email: userData.email,
+            name: userData.name,
+            role: userData.role
+          }
+        },
+        { status: 200 }
+      )
     } catch {
-      return new Response(JSON.stringify({ error: 'Invalid token' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      })
+      return Response.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      )
     }
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Something went wrong' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    })
+    return Response.json(
+      { error: 'Something went wrong' },
+      { status: 500 }
+    )
   }
 }
 
 export async function DELETE() {
   // Clear cookie by setting expired date
-  return new Response(JSON.stringify({ success: true }), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-      'Set-Cookie': 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
+  return Response.json(
+    { success: true },
+    {
+      status: 200,
+      headers: {
+        'Set-Cookie': 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax'
+      }
     }
-  })
+  )
 }

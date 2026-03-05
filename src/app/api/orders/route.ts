@@ -1,4 +1,4 @@
-// app/api/orders/route.ts - Fixed for Next.js 15+
+// app/api/orders/route.ts - Complete Fixed Version for Next.js 15+
 
 // Sample orders data
 const orders = [
@@ -33,12 +33,12 @@ export async function POST(request: Request) {
   return Response.json({ success: true, order: newOrder }, { status: 201 })
 }
 
-// GET /api/orders/[id] - Fixed for Next.js 15+
+// GET /api/orders/[id] - FIXED
 export async function GET_BY_ID(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await params
+  const { id } = params
   const order = orders.find(o => o.id === id)
   
   if (!order) {
@@ -48,12 +48,12 @@ export async function GET_BY_ID(
   return Response.json(order)
 }
 
-// PATCH /api/orders/[id] - Fixed for Next.js 15+
+// PATCH /api/orders/[id] - FIXED
 export async function PATCH(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await params
+  const { id } = params
   const body = await request.json()
   const orderIndex = orders.findIndex(o => o.id === id)
   
@@ -65,12 +65,12 @@ export async function PATCH(
   return Response.json({ success: true, order: orders[orderIndex] })
 }
 
-// DELETE /api/orders/[id] - Fixed for Next.js 15+
+// DELETE /api/orders/[id] - FIXED
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await params
+  const { id } = params
   const orderIndex = orders.findIndex(o => o.id === id)
   
   if (orderIndex === -1) {

@@ -1,4 +1,4 @@
-// app/api/products/route.ts - Fixed for Next.js 15+
+// app/api/products/route.ts - Complete Fixed Version for Next.js 15+
 
 // Sample products data
 const products = [
@@ -19,12 +19,24 @@ export async function GET(request: Request) {
   return Response.json(filtered)
 }
 
-// GET /api/products/[id] - Fixed for Next.js 15+
+// POST /api/products
+export async function POST(request: Request) {
+  const body = await request.json()
+  const newProduct = {
+    id: String(products.length + 1),
+    ...body,
+    createdAt: new Date().toISOString()
+  }
+  products.push(newProduct)
+  return Response.json({ success: true, product: newProduct }, { status: 201 })
+}
+
+// GET /api/products/[id] - FIXED
 export async function GET_BY_ID(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await params
+  const { id } = params
   const product = products.find(p => p.id === id)
   
   if (!product) {
@@ -34,12 +46,12 @@ export async function GET_BY_ID(
   return Response.json(product)
 }
 
-// PUT /api/products/[id] - Fixed for Next.js 15+
+// PUT /api/products/[id] - FIXED
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await params
+  const { id } = params
   const body = await request.json()
   const productIndex = products.findIndex(p => p.id === id)
   
@@ -51,12 +63,12 @@ export async function PUT(
   return Response.json({ success: true, product: products[productIndex] })
 }
 
-// DELETE /api/products/[id] - Fixed for Next.js 15+
+// DELETE /api/products/[id] - FIXED
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await params
+  const { id } = params
   const productIndex = products.findIndex(p => p.id === id)
   
   if (productIndex === -1) {

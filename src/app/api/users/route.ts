@@ -1,8 +1,8 @@
-// app/api/users/route.ts - Fixed for Next.js 15+
+// app/api/users/route.ts - Complete Fixed Version for Next.js 15+
 
 // Sample users data
 const users = [
-  { id: '1', email: 'sajid.syed@gmail.com', name: 'Hafiz Sajid Syed', role: 'ADMIN' },
+  { id: '1', email: 'sajidsyedhafizsajidsyed@gmail.com', name: 'Hafiz Sajid Syed', role: 'ADMIN' },
   { id: '2', email: 'ahmed@example.com', name: 'Ahmed Khan', role: 'CUSTOMER' }
 ]
 
@@ -11,12 +11,24 @@ export async function GET() {
   return Response.json(users)
 }
 
-// GET /api/users/[id] - Fixed for Next.js 15+
+// POST /api/users
+export async function POST(request: Request) {
+  const body = await request.json()
+  const newUser = {
+    id: String(users.length + 1),
+    ...body,
+    createdAt: new Date().toISOString()
+  }
+  users.push(newUser)
+  return Response.json({ success: true, user: newUser }, { status: 201 })
+}
+
+// GET /api/users/[id] - FIXED
 export async function GET_BY_ID(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await params
+  const { id } = params
   const user = users.find(u => u.id === id)
   
   if (!user) {
@@ -26,12 +38,12 @@ export async function GET_BY_ID(
   return Response.json(user)
 }
 
-// PUT /api/users/[id] - Fixed for Next.js 15+
+// PUT /api/users/[id] - FIXED
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await params
+  const { id } = params
   const body = await request.json()
   const userIndex = users.findIndex(u => u.id === id)
   
@@ -43,12 +55,12 @@ export async function PUT(
   return Response.json({ success: true, user: users[userIndex] })
 }
 
-// DELETE /api/users/[id] - Fixed for Next.js 15+
+// DELETE /api/users/[id] - FIXED
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await params
+  const { id } = params
   const userIndex = users.findIndex(u => u.id === id)
   
   if (userIndex === -1) {

@@ -4,7 +4,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { id } = params
-  return Response.json({ id, name: `Product ${id}` })
+  return Response.json({ id, name: `Product ${id}`, price: 45.99 })
 }
 
 export async function PUT(
@@ -21,5 +21,5 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const { id } = params
-  return Response.json({ success: true, message: `Product ${id} deleted` })
+  return Response.json({ success: true })
 }

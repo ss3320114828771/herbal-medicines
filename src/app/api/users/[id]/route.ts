@@ -4,7 +4,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { id } = params
-  return Response.json({ id, name: `User ${id}` })
+  return Response.json({ id, name: 'User Name', email: 'user@example.com' })
 }
 
 export async function PUT(
@@ -21,5 +21,5 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const { id } = params
-  return Response.json({ success: true, message: `User ${id} deleted` })
+  return Response.json({ success: true })
 }

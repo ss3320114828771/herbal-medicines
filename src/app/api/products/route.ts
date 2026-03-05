@@ -1,13 +1,13 @@
-// src/app/api/orders/route.ts
+// src/app/api/products/route.ts
 export async function GET() {
-  const orders = [
-    { id: '1', total: 156.50, status: 'PENDING' },
-    { id: '2', total: 89.99, status: 'DELIVERED' }
+  const products = [
+    { id: '1', name: 'Black Seed Oil', price: 45.99 },
+    { id: '2', name: 'Organic Honey', price: 64.52 }
   ]
-  return Response.json(orders)
+  return Response.json(products)
 }
 
 export async function POST(request: Request) {
   const body = await request.json()
-  return Response.json({ success: true, order: body })
+  return Response.json({ success: true, product: body })
 }

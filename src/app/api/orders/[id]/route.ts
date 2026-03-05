@@ -4,7 +4,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { id } = params
-  return Response.json({ id, message: `Order ${id} details` })
+  return Response.json({ id, status: 'PENDING', total: 100 })
 }
 
 export async function PATCH(
@@ -21,5 +21,5 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const { id } = params
-  return Response.json({ success: true, message: `Order ${id} deleted` })
+  return Response.json({ success: true })
 }
